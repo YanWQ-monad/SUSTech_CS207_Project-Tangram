@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Test builds
+tests/*/results.xml
+tests/*/sim_build/
