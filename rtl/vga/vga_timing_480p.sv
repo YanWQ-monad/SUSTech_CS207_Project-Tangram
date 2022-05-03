@@ -24,6 +24,9 @@ module vga_timing_480p (
     parameter VS_END = VS_STA + 2;    // sync ends
     parameter SCREEN = 524;           // last line on screen (after back porch)
 
+    initial sx = 0;
+    initial sy = 0;
+
     always_comb begin
         hsync = ~((sx > HS_STA) && (sx <= HS_END));
         vsync = ~((sy > VS_STA) && (sy <= VS_END));

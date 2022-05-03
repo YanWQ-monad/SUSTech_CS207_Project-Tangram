@@ -34,11 +34,6 @@ async def vga_timing_480p_full_test(dut):
 
     clock = cocotb.start_soon(Clock(dut.clk_pix, 10, 'ns').start())
 
-    # initialize the VGA timing module
-    dut.rst_pix.value = 1
-    await RisingEdge(dut.clk_pix)
-    dut.rst_pix.value = 0
-
     async def iterator_clock(times):
         for i in range(times):
             await RisingEdge(dut.clk_pix)
@@ -76,11 +71,6 @@ async def vga_timing_480p_reset_test(dut):
     """Test the reset function of VGA timing 480P"""
 
     clock = cocotb.start_soon(Clock(dut.clk_pix, 10, 'ns').start())
-
-    # initialize the VGA timing module
-    dut.rst_pix.value = 1
-    await RisingEdge(dut.clk_pix)
-    dut.rst_pix.value = 0
 
     wait = random.randint(1, 800 * 525)
     dut._log.info(f'Wait {wait} cycles')
