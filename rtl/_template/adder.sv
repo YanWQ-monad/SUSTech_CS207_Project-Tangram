@@ -1,3 +1,7 @@
+`resetall
+`timescale 1ns / 1ps
+`default_nettype none
+
 module adder #(
     parameter integer DATA_WIDTH = 4
 ) (
@@ -9,3 +13,5 @@ module adder #(
 assign out = a + b;
 
 endmodule
+
+`resetall

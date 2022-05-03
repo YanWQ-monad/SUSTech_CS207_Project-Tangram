@@ -1,6 +1,3 @@
-# LDFLAGS += -undefined dynamic_lookup -v
-
-# SIM ?= verilator
 TOPLEVEL_LANG ?= verilog
 
 VERILOG_SOURCES += ../../rtl/_template/adder.sv
