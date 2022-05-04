@@ -1,8 +1,8 @@
 .PHONY: all
-all: tests
+all:
 
-.PHONY: tests
-tests:
+.PHONY: test
+test:
 	make -C tests
 
 .PHONY: clean
