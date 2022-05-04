@@ -7,4 +7,6 @@ VERILOG_SOURCES += ../../rtl/vga/vga_timing_480p.sv
 TOPLEVEL = vga_display
 MODULE = test_vga_display
 
+export PYTHONPATH := ../common:$(PYTHONPATH)
+
 include $(shell cocotb-config --makefiles)/Makefile.sim
