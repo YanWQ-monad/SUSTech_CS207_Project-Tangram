@@ -18,26 +18,19 @@ jobs:
     - name: Cache Icarus Verilog Build
       uses: actions/cache@v3
       with:
-        path: ~/verilog
-        key: ${{ runner.os }}
+        path: verilog_build
+        key: ${{ runner.os }}-3
 
-    - name: Checkout Icarus Verilog
+    - name: Prepare Icarus Verilog source
       if: steps.cache.outputs.cache-hit != 'true'
-      uses: actions/checkout@v2
-      with:
-        clean: false
-        repository: steveicarus/iverilog
-        path: ~/verilog
-
-    - name: Prepare Icarus Verilog
-      if: steps.cache.outputs.cache-hit != 'true'
-      working-directory: ~/verilog
       run: |
-        sh autoconf.sh
-        ./configure
+        wget "https://github.com/steveicarus/iverilog/archive/refs/tags/v11_0.tar.gz"
+        mkdir verilog_build
+        tar zxf v11_0.tar.gz --strip-components=1 -C verilog_build
+        cd verilog_build && sh autoconf.sh && ./configure
 
     - name: Build and Install Icarus Verilog
-      working-directory: ~/verilog
+      working-directory: verilog_build
       run: |
         make
         sudo make install
