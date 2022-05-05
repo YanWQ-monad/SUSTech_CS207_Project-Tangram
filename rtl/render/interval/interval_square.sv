@@ -1,3 +1,7 @@
+`resetall
+`timescale 1ns / 1ps
+`default_nettype none
+
 module interval_square #(parameter CORDW=10) (
     input  wire logic [CORDW-1:0] x0,    // point 0 x
     input  wire logic [CORDW-1:0] y0,    // point 0 y
@@ -25,3 +29,5 @@ module interval_square #(parameter CORDW=10) (
     end
 
 endmodule
+
+`resetall

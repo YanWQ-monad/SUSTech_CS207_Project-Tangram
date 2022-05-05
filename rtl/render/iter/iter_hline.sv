@@ -1,3 +1,7 @@
+`resetall
+`timescale 1ns / 1ps
+`default_nettype none
+
 module iter_hline #(parameter CORDW=10) (
     input  wire logic clk,             // clock
     input  wire logic rst,             // reset
@@ -49,3 +53,5 @@ module iter_hline #(parameter CORDW=10) (
     end
 
 endmodule
+
+`resetall

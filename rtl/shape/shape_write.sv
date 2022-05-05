@@ -1,3 +1,7 @@
+`resetall
+`timescale 1ns / 1ps
+`default_nettype none
+
 module shape_write #(
     parameter DATAB = 3,   // data bits, 2^3 = 8
     parameter CORDW = 10,
@@ -72,3 +76,5 @@ module shape_write #(
     end
 
 endmodule
+
+`resetall

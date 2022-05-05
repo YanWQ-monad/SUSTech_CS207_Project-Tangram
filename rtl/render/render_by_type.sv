@@ -1,3 +1,7 @@
+`resetall
+`timescale 1ns / 1ps
+`default_nettype none
+
 module render_by_type #(parameter CORDW=10, parameter DATAW=12) (
     input  wire logic clk,
     input  wire logic rst,
@@ -56,3 +60,5 @@ module render_by_type #(parameter CORDW=10, parameter DATAW=12) (
     );
 
 endmodule
+
+`resetall

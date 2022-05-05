@@ -1,3 +1,7 @@
+`resetall
+`timescale 1ns / 1ps
+`default_nettype none
+
 module iter_line_scanner #(
     parameter CORDW = 10,
     parameter SCREEN_END = 480-1
@@ -77,3 +81,5 @@ module iter_line_scanner #(
     end
 
 endmodule
+
+`resetall

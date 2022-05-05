@@ -1,3 +1,7 @@
+`resetall
+`timescale 1ns / 1ps
+`default_nettype none
+
 module basic_square_control #(
     parameter DATAB = 3,   // data bits, 2^3 = 8
     parameter CORDW = 10,
@@ -222,3 +226,5 @@ module basic_square_control #(
     end
 
 endmodule
+
+`resetall

@@ -1,3 +1,7 @@
+`resetall
+`timescale 1ns / 1ps
+`default_nettype none
+
 module iter_square #(parameter CORDW=10) (  // unsigned coordinate width
     input  wire logic clk,             // clock
     input  wire logic rst,             // reset
@@ -63,3 +67,5 @@ module iter_square #(parameter CORDW=10) (  // unsigned coordinate width
     end
 
 endmodule
+
+`resetall
