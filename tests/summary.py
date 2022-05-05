@@ -29,7 +29,7 @@ def fmt_summary_item(name, count, color):
 
 
 def main():
-    paths = sys.argv[1:]
+    paths = sorted(sys.argv[1:])
 
     print('-' * len(HEADER))
     print(HEADER)
