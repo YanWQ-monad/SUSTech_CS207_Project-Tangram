@@ -29,7 +29,7 @@ async def vga_display_test(dut):
     for i in range(len(ram.data)):
         ram.data[i] = random.randint(0, 0xFFF)
 
-    cocotb.start_soon(ram.bind(dut.clk, dut.ram_address, dut.ram_enable, dut.ram_data))
+    cocotb.start_soon(ram.bind_read(dut.clk, dut.ram_address, dut.ram_enable, dut.ram_data))
     clock = cocotb.start_soon(Clock(dut.clk, 10, 'ns').start())
     dut.rst.value = 0
     dut.ram_address_offset.value = 0
