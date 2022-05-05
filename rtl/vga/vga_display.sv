@@ -2,22 +2,27 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-module vga_display (
+module vga_display #(
+    parameter ADDRW = 20,
+    parameter DATAW = 12,
+    parameter CORDW = 10,
+    parameter COLRW = 4
+) (
     input  wire logic clk,  // 100MHz clock
     input  wire logic rst,  // reset
 
     // RAM
-    input  wire logic [19:0] ram_address_offset,  // buffer offset, used in double buffer
-    output      logic [19:0] ram_address,         // read address
-    output      logic        ram_enable,          // read enable
-    input  wire logic [23:0] ram_data,            // read data
+    input  wire logic [ADDRW-1:0] ram_address_offset,  // buffer offset, used in double buffer
+    output      logic [ADDRW-1:0] ram_address,         // read address
+    output      logic             ram_enable,          // read enable
+    input  wire logic [DATAW-1:0] ram_data,            // read data
 
     // VGA output
-    output      logic vga_hsync,    // VGA horizontal sync
-    output      logic vga_vsync,    // VGA vertical sync
-    output      logic [3:0] vga_r,  // 4-bit VGA red
-    output      logic [3:0] vga_g,  // 4-bit VGA green
-    output      logic [3:0] vga_b   // 4-bit VGA blue
+    output      logic vga_hsync,          // VGA horizontal sync
+    output      logic vga_vsync,          // VGA vertical sync
+    output      logic [COLRW-1:0] vga_r,  // 4-bit VGA red
+    output      logic [COLRW-1:0] vga_g,  // 4-bit VGA green
+    output      logic [COLRW-1:0] vga_b   // 4-bit VGA blue
 );
 
     // Debug only
@@ -36,7 +41,7 @@ module vga_display (
         .clk_pix_locked
     );
 
-    logic [9:0] sx, sy;
+    logic [CORDW-1:0] sx, sy;
     logic hsync, vsync, de;
     vga_timing_480p timing(
         .clk_pix,
@@ -48,10 +53,10 @@ module vga_display (
         .de
     );
 
-    logic [9:0] i_sx, i_sy;
+    logic [CORDW-1:0] i_sx, i_sy;
     logic i_hsync = 1, i_vsync = 1, i_de = 0;
 
-    logic [19:0] id;
+    logic [ADDRW-1:0] id;
     vga_pixel_id mapper(
         .x(i_sx),
         .y(i_sy),
@@ -62,7 +67,7 @@ module vga_display (
     // and "internal" is used to fetch data from memory
 
     enum {RAM_PREPARE, RAM_READING, RAM_IDLE} state, state_next;
-    logic [23:0] data;
+    logic [DATAW-1:0] data;
     logic ram_trigger;
 
     always_ff @(posedge clk_pix) begin
