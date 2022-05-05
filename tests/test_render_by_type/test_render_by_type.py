@@ -7,11 +7,12 @@ from cocotb.triggers import ClockCycles, RisingEdge, Timer
 async def render_square_test(dut):
     """Test square rendering"""
 
-    xy = (10, 10)
-    size = 20
+    xy = (10, 17)
+    size = 16
 
     clock = cocotb.start_soon(Clock(dut.clk, 10, 'ns').start())
     dut.rst.value = 0
+    dut.ty.value = 0
     dut.x0.value = xy[0]
     dut.y0.value = xy[1]
     dut.size.value = size
