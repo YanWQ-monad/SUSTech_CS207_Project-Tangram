@@ -16,6 +16,7 @@ jobs:
         sudo apt-get install -y --no-install-recommends gperf flex g++
     
     - name: Cache Icarus Verilog Build
+      id: cache
       uses: actions/cache@v3
       with:
         path: verilog_build
