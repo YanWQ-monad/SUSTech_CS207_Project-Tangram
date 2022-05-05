@@ -1,5 +1,3 @@
-TOPTARGETS := all clean
-
 SKIPPED = common
 
 SUBDIRS := $(wildcard */.)
@@ -11,8 +9,14 @@ ifdef FILTER
 	SUBDIRS := $(foreach v, $(SUBDIRS), $(if $(findstring $(FILTER), $(v)), $(v), ))
 endif
 
-$(TOPTARGETS): $(SUBDIRS)
+.PHONY: all
+all: $(SUBDIRS)
+	python summary.py $(SUBDIRS)
+
+.PHONY: clean
+clean: $(SUBDIRS)
+
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
-.PHONY: $(TOPTARGETS) $(SUBDIRS)
+.PHONY: $(SUBDIRS)
