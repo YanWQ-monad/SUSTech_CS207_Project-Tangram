@@ -1,6 +1,6 @@
 module shape_read #(
     parameter DATAB = 3,   // data bits, 2^3 = 8
-    parameter CORDW = 9,
+    parameter CORDW = 10,
     parameter ADDRW = 20,
     parameter DATAW = 12,
     parameter NUMW = DATAW

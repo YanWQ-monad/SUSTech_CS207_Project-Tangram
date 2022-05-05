@@ -1,6 +1,6 @@
 module shape_write #(
     parameter DATAB = 3,   // data bits, 2^3 = 8
-    parameter CORDW = 9,
+    parameter CORDW = 10,
     parameter ADDRW = 20,
     parameter DATAW = 12,
     parameter NUMW = DATAW
@@ -42,6 +42,7 @@ module shape_write #(
             2: ram_data = { 3'b000, y };
             3: ram_data = size;
             4: ram_data = rotate;
+            default: ram_data = 0;
         endcase
     end
 

@@ -1,5 +1,5 @@
 module iter_line_scanner #(
-    parameter CORDW = 9,
+    parameter CORDW = 10,
     parameter SCREEN_END = 480-1
 ) (
     input  wire logic clk,             // clock

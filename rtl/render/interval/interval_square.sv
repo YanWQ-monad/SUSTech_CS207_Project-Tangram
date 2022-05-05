@@ -1,4 +1,4 @@
-module interval_square #(parameter CORDW=9) (
+module interval_square #(parameter CORDW=10) (
     input  wire logic [CORDW-1:0] x0,    // point 0 x
     input  wire logic [CORDW-1:0] y0,    // point 0 y
     input  wire logic [CORDW-1:0] size,  // square edge length

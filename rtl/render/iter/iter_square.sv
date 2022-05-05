@@ -1,4 +1,4 @@
-module iter_square #(parameter CORDW=9) (  // unsigned coordinate width
+module iter_square #(parameter CORDW=10) (  // unsigned coordinate width
     input  wire logic clk,             // clock
     input  wire logic rst,             // reset
     input  wire logic start,           // start line drawing

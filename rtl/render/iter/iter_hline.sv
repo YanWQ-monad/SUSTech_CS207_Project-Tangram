@@ -1,4 +1,4 @@
-module iter_hline #(parameter CORDW=9) (
+module iter_hline #(parameter CORDW=10) (
     input  wire logic clk,             // clock
     input  wire logic rst,             // reset
     input  wire logic start,           // start line drawing
