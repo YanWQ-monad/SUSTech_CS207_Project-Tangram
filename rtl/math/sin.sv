@@ -14,7 +14,6 @@ module sin (
     logic signed [`FLOAT_DOUBLE_BITS-1:0] theta;
     logic signed [`FLOAT_DOUBLE_BITS-1:0] theta2;
     logic signed [`FLOAT_DOUBLE_BITS-1:0] theta3;
-    logic signed [`FLOAT_DOUBLE_BITS-1:0] theta4;
     logic signed [`FLOAT_DOUBLE_BITS-1:0] theta5;
 
     logic signed [`FLOAT_DOUBLE_BITS-1:0] part2;
@@ -35,11 +34,10 @@ module sin (
 
         theta2 = (theta * theta) >>> (`FLOAT_DCM_BITS);
         theta3 = (theta2 * theta) >>> (`FLOAT_DCM_BITS);
-        theta4 = (theta2 * theta2) >>> (`FLOAT_DCM_BITS);
-        theta5 = (theta4 * theta) >>> (`FLOAT_DCM_BITS);
+        theta5 = (theta2 * theta3) >>> (`FLOAT_DCM_BITS);
 
         part2 = (theta3 * (`INV_6)) >>> (`FLOAT_DCM_BITS);
-        part3 = (theta5 * (`INV_20)) >>> (`FLOAT_DCM_BITS);
+        part3 = (theta5 * (`INV_120)) >>> (`FLOAT_DCM_BITS);
 
         value = theta - part2 + part3;
         out = value[`FLOAT_BITS-1:0];

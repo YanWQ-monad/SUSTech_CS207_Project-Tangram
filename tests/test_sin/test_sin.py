@@ -6,7 +6,7 @@ from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, RisingEdge, Timer
 
 
-MAX_ALLOW_ERROR = 0.002
+MAX_ALLOW_ERROR = 0.001
 
 
 def fixed_float(x):
