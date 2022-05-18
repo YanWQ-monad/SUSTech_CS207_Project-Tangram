@@ -9,12 +9,12 @@ module sin (
     output      logic signed [`FLOAT_BITS-1:0] out
 );
 
-    logic signed [`FLOAT_DOUBLE_BITS-1:0] theta2;
-    logic signed [`FLOAT_DOUBLE_BITS-1:0] theta3;
-    logic signed [`FLOAT_DOUBLE_BITS-1:0] theta5;
+    logic signed [`FLOAT_TEMP_BITS-1:0] theta2;
+    logic signed [`FLOAT_TEMP_BITS-1:0] theta3;
+    logic signed [`FLOAT_TEMP_BITS-1:0] theta5;
 
-    logic signed [`FLOAT_DOUBLE_BITS-1:0] part2;
-    logic signed [`FLOAT_DOUBLE_BITS-1:0] part3;
+    logic signed [`FLOAT_TEMP_BITS-1:0] part2;
+    logic signed [`FLOAT_TEMP_BITS-1:0] part3;
 
     always_comb begin
         theta2 = (in * in) >>> (`FLOAT_DCM_BITS);

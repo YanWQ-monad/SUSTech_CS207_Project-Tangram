@@ -27,7 +27,7 @@ module matrix_multiply (
     output      logic signed [`FLOAT_BITS-1:0] v2
 );
 
-    logic signed [`FLOAT_DOUBLE_BITS-1:0] b1, b2, b3, b4;
+    logic signed [`FLOAT_TEMP_BITS-1:0] b1, b2, b3, b4;
 
     always_comb begin
         b1 = (u1 * a11) >>> (`FLOAT_DCM_BITS);
