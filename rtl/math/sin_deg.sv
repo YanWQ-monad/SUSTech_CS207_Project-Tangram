@@ -2,7 +2,7 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-`include "constants.h"
+`include "rtl/math/constants.h"
 
 module sin_deg (
     input  wire logic signed [`INT_BITS-1:0] in,
