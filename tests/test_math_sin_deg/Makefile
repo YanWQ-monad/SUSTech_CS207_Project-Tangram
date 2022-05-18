@@ -1,7 +1,6 @@
 TOPLEVEL_LANG ?= verilog
 
 VERILOG_SOURCES += ../../rtl/math/radians.sv
-VERILOG_SOURCES += ../../rtl/math/signed_extend.sv
 VERILOG_SOURCES += ../../rtl/math/sin_deg.sv
 VERILOG_SOURCES += ../../rtl/math/sin.sv
 TOPLEVEL = sin_deg
