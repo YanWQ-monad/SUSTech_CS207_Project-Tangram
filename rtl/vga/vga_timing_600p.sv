@@ -7,7 +7,7 @@ module vga_timing_600p (
     input  wire logic rst_pix,   // reset in pixel clock domain
     output      logic frame,     // new frame signal
     output      logic [9:0] sx,  // horizontal screen position
-    output      logic [9:0] sy,  // vertical screen position
+    output      logic [9:0] sy = 0,  // vertical screen position
     output      logic hsync,     // horizontal sync
     output      logic vsync,     // vertical sync
     output      logic de         // data enable (low in blanking interval)
@@ -26,7 +26,6 @@ module vga_timing_600p (
     parameter SCREEN = 628-1;         // last line on screen (after back porch)
 
     logic [10:0] ix = 0;
-    initial sy = 0;
 
     always_comb begin
         sx = ix[9:0];
