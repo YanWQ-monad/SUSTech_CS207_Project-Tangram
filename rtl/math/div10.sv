@@ -7,7 +7,7 @@
 module div10 (
     input  wire logic [`INT_BITS-1:0] in,
     output      logic [`INT_BITS-1:0] quotient,
-    output      logic [`INT_BITS-1:0] remainder
+    output      logic [3:0] remainder
 );
 
     logic [`INT_BITS-1:0] q, r;
