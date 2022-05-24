@@ -1,0 +1,27 @@
+s_ty[1] <= s_ty[0];
+s_x[1] <= s_x[0];
+s_y[1] <= s_y[0];
+s_size[1] <= s_size[0];
+s_angle[1] <= s_angle[0];
+s_color[1] <= s_color[0];
+
+s_ty[2] <= s_ty[1];
+s_x[2] <= s_x[1];
+s_y[2] <= s_y[1];
+s_size[2] <= s_size[1];
+s_angle[2] <= s_angle[1];
+s_color[2] <= s_color[1];
+
+s_ty[3] <= s_ty[2];
+s_x[3] <= s_x[2];
+s_y[3] <= s_y[2];
+s_size[3] <= s_size[2];
+s_angle[3] <= s_angle[2];
+s_color[3] <= s_color[2];
+
+s_ty[0] <= s_ty[number];
+s_x[0] <= s_x[number];
+s_y[0] <= s_y[number];
+s_size[0] <= s_size[number];
+s_angle[0] <= s_angle[number];
+s_color[0] <= s_color[number];
