@@ -53,6 +53,11 @@ module core #(
     parameter COLOR_SIZE = 64 * 2;
 
     logic l_btn_p, r_btn_p, u_btn_p, d_btn_p, c_btn_p;
+    logic l_btn_once, r_btn_once, u_btn_once, d_btn_once, c_btn_once;
+    logic [1:0] l_btn_mag, r_btn_mag, u_btn_mag, d_btn_mag, c_btn_mag;
+
+    // Signals
+    logic sg_done;
 
     // VGA properties
     logic [CORDW-1:0] sx, sy;
@@ -158,6 +163,12 @@ module core #(
         .vsync(vga_vsync),
         .de
     );
+
+    input_mode l_btn_mode(.clk, .rst, .in(l_btn), .down(l_btn_dn), .mode(swch_7), .clr(sg_done), .out(l_btn_p), .once(l_btn_once), .mag(l_btn_mag));
+    input_mode r_btn_mode(.clk, .rst, .in(r_btn), .down(r_btn_dn), .mode(swch_7), .clr(sg_done), .out(r_btn_p), .once(r_btn_once), .mag(r_btn_mag));
+    input_mode u_btn_mode(.clk, .rst, .in(u_btn), .down(u_btn_dn), .mode(swch_7), .clr(sg_done), .out(u_btn_p), .once(u_btn_once), .mag(u_btn_mag));
+    input_mode d_btn_mode(.clk, .rst, .in(d_btn), .down(d_btn_dn), .mode(swch_7), .clr(sg_done), .out(d_btn_p), .once(d_btn_once), .mag(d_btn_mag));
+    input_mode c_btn_mode(.clk, .rst, .in(c_btn), .down(c_btn_dn), .mode(swch_7), .clr(sg_done), .out(c_btn_p), .once(c_btn_once), .mag(c_btn_mag));
 
     tube_4_display tube_mod_1r(
         .clk,
@@ -266,6 +277,8 @@ module core #(
     always_ff @(posedge clk) state <= #1 next_state;
 
     always_comb begin
+        sg_done = state == DONE;
+
         if (rst) begin
             next_state = INIT;
         end else begin
@@ -287,7 +300,7 @@ module core #(
                 MODE_0: next_state = DONE;
                 MODE_1: next_state = DONE;
                 MODE_2: begin
-                    if (c_btn_p)
+                    if (c_btn_once)
                         next_state = NEXT_SHAPE;
                     else
                         next_state = DONE;
@@ -303,28 +316,28 @@ module core #(
     always_ff @(posedge clk) begin
         case (state)
             MODE_0: begin
-                if (u_btn && (|s_y[0]))   //   |y  iff  y > 0
+                if (u_btn_p && (|s_y[0]))   //   |y  iff  y > 0
                     s_y[0] <= s_y[0] - 1;
-                else if (d_btn && (s_y[0] < 600 - 1))   // TODO: remove magic number
+                else if (d_btn_p && (s_y[0] < 600 - 1))   // TODO: remove magic number
                     s_y[0] <= s_y[0] + 1;
 
-                if (l_btn && (|s_x[0]))
+                if (l_btn_p && (|s_x[0]))
                     s_x[0] <= s_x[0] - 1;
-                else if (r_btn && (s_x[0] < 800 - 1))
+                else if (r_btn_p && (s_x[0] < 800 - 1))
                     s_x[0] <= s_x[0] + 1;
             end
             MODE_1: begin
-                if (l_btn)
+                if (l_btn_p)
                     s_angle[0] <= p_angle;
-                else if (r_btn)
+                else if (r_btn_p)
                     s_angle[0] <= n_angle;
 
-                if (u_btn)
+                if (u_btn_p)
                     s_size[0] <= s_size[0] + 1;
-                else if (d_btn && (|s_size[0]))
+                else if (d_btn_p && (|s_size[0]))
                     s_size[0] <= s_size[0] - 1;
 
-                if (c_btn_p) begin
+                if (c_btn_once) begin
                     if (s_ty[0] == MAX_TYPE)
                         s_ty[0] <= 0;
                     else
@@ -332,26 +345,26 @@ module core #(
                 end
             end
             MODE_2: begin
-                if (l_btn_p && (|number)) begin
+                if (l_btn_once && (|number)) begin
                     number <= number - 1;
                     s_color[number] <= 12'b0;
-                end else if (r_btn_p && (number < MAXSHP - 1)) begin
+                end else if (r_btn_once && (number < MAXSHP - 1)) begin
                     s_color[number] <= 12'hFFF;
                     number <= number + 1;
                 end
             end
             MODE_3: begin
-                if (u_btn && (|cy))
+                if (u_btn_p && (|cy))
                     cy <= cy - 1;
-                else if (d_btn && (cy < COLOR_SIZE - 1))
+                else if (d_btn_p && (cy < COLOR_SIZE - 1))
                     cy <= cy + 1;
 
-                if (l_btn && (|cx))
+                if (l_btn_p && (|cx))
                     cx <= cx - 1;
-                else if (r_btn && (cx < COLOR_SIZE - 1))
+                else if (r_btn_p && (cx < COLOR_SIZE - 1))
                     cx <= cx + 1;
 
-                if (c_btn)
+                if (c_btn_once)
                     s_color[0] <= c_color;
             end
             NEXT_SHAPE: begin
@@ -361,20 +374,6 @@ module core #(
                 number <= 1;
                 cx <= 0;
                 cy <= 0;
-            end
-            DONE: begin
-                l_btn_p <= 0;
-                r_btn_p <= 0;
-                u_btn_p <= 0;
-                d_btn_p <= 0;
-                c_btn_p <= 0;
-            end
-            IDLE: begin
-                if (l_btn_dn) l_btn_p <= 1;
-                if (r_btn_dn) r_btn_p <= 1;
-                if (u_btn_dn) u_btn_p <= 1;
-                if (d_btn_dn) d_btn_p <= 1;
-                if (c_btn_dn) c_btn_p <= 1;
             end
             default: ;
         endcase
