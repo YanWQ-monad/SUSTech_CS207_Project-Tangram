@@ -68,12 +68,19 @@ module core #(
     logic [`INT_BITS-1:0] s_x [MAXSHP-1:0];
     logic [`INT_BITS-1:0] s_y [MAXSHP-1:0];
     logic [`INT_BITS-1:0] s_size [MAXSHP-1:0];
+    logic signed [`FLOAT_BITS-1:0] s_sin [MAXSHP-1:0];
+    logic signed [`FLOAT_BITS-1:0] s_cos [MAXSHP-1:0];
     logic signed [`INT_BITS-1:0] s_angle [MAXSHP-1:0];
     logic [PIXLW-1:0] s_color [MAXSHP-1:0];
     logic [MAXSHP-1:0] ens;
 
     // Angle rotation
     logic [`INT_BITS-1:0] p_angle, n_angle;
+
+    // Angle sin/cos initializer
+    logic [`INT_BITS-1:0] a_id;
+    logic [`INT_BITS-1:0] a_angle;
+    logic signed [`FLOAT_BITS-1:0] a_sin, a_cos;
 
     logic [`INT_BITS-1:0] number;
     logic [`INT_BITS-1:0] s_id;
@@ -116,12 +123,17 @@ module core #(
                 .x0(s_x[i]),
                 .y0(s_y[i]),
                 .size(s_size[i]),
-                .angle(s_angle[i]),
+                // .angle(s_angle[i]),
+                .sin(s_sin[i]),
+                .cos(s_cos[i]),
                 .x,
                 .y,
                 .out(ens[i])
             );
     endgenerate
+
+    cos_deg cos(.in(a_angle), .out(a_cos));
+    sin_deg sin(.in(a_angle), .out(a_sin));
 
     circular_step #(.DATAW(`INT_BITS), .DW_BOUND(-180), .UP_BOUND(179)) step(
         .in(s_angle[0]),
@@ -258,7 +270,7 @@ module core #(
         end
     end
 
-    enum { INIT, IDLE, MODE_0, MODE_1, MODE_2, MODE_3, NEXT_SHAPE, DONE } state, next_state;
+    enum { INIT, IDLE, ANGLE_W, ANGLE_R, MODE_0, MODE_1, MODE_2, MODE_3, NEXT_SHAPE, DONE } state, next_state;
     always_ff @(posedge clk) state <= #1 next_state;
 
     always_comb begin
@@ -282,6 +294,13 @@ module core #(
                     end else
                         next_state = IDLE;
                 end
+                ANGLE_W: next_state = ANGLE_R;
+                ANGLE_R: begin
+                    if (a_id == MAXSHP - 1)
+                        next_state = IDLE;
+                    else
+                        next_state = ANGLE_W;
+                end
                 MODE_0: next_state = DONE;
                 MODE_1: next_state = DONE;
                 MODE_2: begin
@@ -292,7 +311,7 @@ module core #(
                 end
                 MODE_3: next_state = DONE;
                 NEXT_SHAPE: next_state = DONE;
-                DONE: next_state = IDLE;
+                DONE: next_state = ANGLE_W;
                 default: next_state = DONE;
             endcase
         end
@@ -300,6 +319,14 @@ module core #(
 
     always_ff @(posedge clk) begin
         case (state)
+            ANGLE_W: begin
+                a_angle <= s_angle[a_id];
+            end
+            ANGLE_R: begin
+                s_sin[a_id] <= a_sin;
+                s_cos[a_id] <= a_cos;
+                a_id <= (a_id == MAXSHP - 1) ? 0 : (a_id + 1);
+            end
             MODE_0: begin
                 if (u_btn_p && (|s_y[0]))   //   |y  iff  y > 0
                     s_y[0] <= s_y[0] - 1;
@@ -355,6 +382,7 @@ module core #(
                 number <= 1;
                 cx <= 0;
                 cy <= 0;
+                a_id <= 0;
             end
             default: ;
         endcase
