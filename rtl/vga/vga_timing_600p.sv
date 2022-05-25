@@ -36,16 +36,14 @@ module vga_timing_600p (
     end
 
     always_ff @(posedge clk_pix) begin
-        if (ix == LINE) begin
-            ix <= #1 0;
-            sy <= #1 (sy == SCREEN) ? 0 : sy + 1;
-        end else begin
-            ix <= #1 ix + 1;
-        end
-
         if (rst_pix) begin
-            ix <= #1 0;
-            sy <= #1 0;
+            ix <= 0;
+            sy <= 0;
+        end else if (ix == LINE) begin
+            ix <= 0;
+            sy <= (sy == SCREEN) ? 0 : sy + 1;
+        end else begin
+            ix <= ix + 1;
         end
     end
 
