@@ -21,7 +21,6 @@ module render_shape (
 
     logic signed [`INT_BITS-1:0] dx, dy, ox, oy, sum;
     logic signed [`FLOAT_BITS-1:0] fx, fy, rx, ry;
-    logic signed [`INT_DOUBLE_BITS-1:0] sx, sy, ss;
 
     rotate rotate(
         .x(fx),
@@ -42,16 +41,12 @@ module render_shape (
         ox = rx >>> `FLOAT_DCM_BITS;
         oy = ry >>> `FLOAT_DCM_BITS;
 
-        sx = ox * ox;
-        sy = oy * oy;
-        ss = size * size;
         sum = ox + oy;
 
         case (ty)
             0: out = (ox >= 0) && (oy >= 0) && (sum < size);  // triangle
             1: out = (ox >= 0) && (oy >= 0) && (ox < size) && (oy < size);  // square
-            2: out = (sx + sy < ss);  // circle
-            3: out = (oy >= 0) && (oy < size) && (sum >= 0) && (sum < size);  // parallelogram
+            2: out = (oy >= 0) && (oy < size) && (sum >= 0) && (sum < size);  // parallelogram
         endcase
     end
 

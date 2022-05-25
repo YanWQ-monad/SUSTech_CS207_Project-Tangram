@@ -8,7 +8,7 @@ module core #(
     parameter CORDW = 10,
     parameter PIXLW = 12,
     parameter COLRW = 4,
-    parameter MAXSHP = 4
+    parameter MAXSHP = 3
 ) (
     input  wire logic clk,   // ens clock
     input  wire logic rst,
