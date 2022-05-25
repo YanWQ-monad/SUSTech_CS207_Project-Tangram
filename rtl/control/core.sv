@@ -57,11 +57,11 @@ module core #(
     logic [1:0] l_btn_mag, r_btn_mag, u_btn_mag, d_btn_mag, c_btn_mag;
 
     // Signals
-    logic sg_done;
+    logic sg_done, sg_frame;
 
     // VGA properties
     logic [CORDW-1:0] sx, sy;
-    logic frame, de;
+    logic de;
 
     // Shapes properties
     logic [`INT_BITS-1:0] s_ty [MAXSHP-1:0];
@@ -156,7 +156,7 @@ module core #(
     vga_timing_600p timing(
         .clk_pix(clk),
         .rst_pix(rst),
-        .frame,
+        .frame(sg_frame),
         .sx,
         .sy,
         .hsync(vga_hsync),
@@ -275,7 +275,7 @@ module core #(
             case (state)
                 INIT: next_state = DONE;
                 IDLE: begin
-                    if (frame) begin
+                    if (sg_frame) begin
                         if (swch_1)
                             next_state = MODE_1;
                         else if (swch_2)
