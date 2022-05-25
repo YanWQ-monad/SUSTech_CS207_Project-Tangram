@@ -26,10 +26,12 @@ module core #(
     input  wire logic d_btn_dn,
     input  wire logic c_btn_dn,
 
-    // Switches                // mode 0: move position & rotate(C)
-    input  wire logic swch_1,  // mode 1: select shape(C) & resize(UD) & remove/add(LR)
-    input  wire logic swch_2,  // mode 2: color choose
-    input  wire logic swch_3,  // tube mode (0 for [x, y, id], 1 for [size, angle])
+    // Switches                // mode 0: move position
+    input  wire logic swch_1,  // mode 1: resize(UD) & rotate(LR) & change shape(C)
+    input  wire logic swch_2,  // mode 2: remove/add(LR) & switch shape(C)
+    input  wire logic swch_3,  // mode 3: color choose
+    input  wire logic swch_6,  // switch tube mode (0 for [x, y, id], 1 for [size, angle])
+    input  wire logic swch_7,  // switch button mode
 
     // Output (LED)
     output      logic out_1,   // collision detection
@@ -45,6 +47,7 @@ module core #(
     output      logic [COLRW-1:0] vga_b   // 4-bit VGA blue
 );
 
+    parameter MAX_TYPE = 1 - 1;
     parameter COLOR_X = 340;
     parameter COLOR_Y = 240;
     parameter COLOR_SIZE = 64 * 2;
@@ -231,7 +234,7 @@ module core #(
             r_color = s_color[s_id];
 
         color_en = (sx >= COLOR_X) && (sy >= COLOR_Y) && (csx < COLOR_SIZE) && (csy < COLOR_SIZE);
-        if (swch_2 && color_en) begin
+        if (swch_3 && color_en) begin
             o_color = c_render;
         end else
             o_color = r_color;
@@ -248,7 +251,7 @@ module core #(
     end
 
     always_comb begin
-        if (~swch_3) begin
+        if (~swch_6) begin
             tube_l = tube_1l;
             tube_r = tube_1r;
             tube_en = ten_1;
@@ -259,7 +262,7 @@ module core #(
         end
     end
 
-    enum { INIT, IDLE, MODE_0, MODE_1, MODE_2, NEXT_SHAPE, DONE } state, next_state;
+    enum { INIT, IDLE, MODE_0, MODE_1, MODE_2, MODE_3, NEXT_SHAPE, DONE } state, next_state;
     always_ff @(posedge clk) state <= #1 next_state;
 
     always_comb begin
@@ -274,19 +277,22 @@ module core #(
                             next_state = MODE_1;
                         else if (swch_2)
                             next_state = MODE_2;
+                        else if (swch_3)
+                            next_state = MODE_3;
                         else
                             next_state = MODE_0;
                     end else
                         next_state = IDLE;
                 end
                 MODE_0: next_state = DONE;
-                MODE_1: begin
+                MODE_1: next_state = DONE;
+                MODE_2: begin
                     if (c_btn_p)
                         next_state = NEXT_SHAPE;
                     else
                         next_state = DONE;
                 end
-                MODE_2: next_state = DONE;
+                MODE_3: next_state = DONE;
                 NEXT_SHAPE: next_state = DONE;
                 DONE: next_state = IDLE;
                 default: next_state = DONE;
@@ -306,16 +312,26 @@ module core #(
                     s_x[0] <= s_x[0] - 1;
                 else if (r_btn && (s_x[0] < 800 - 1))
                     s_x[0] <= s_x[0] + 1;
-
-                if (c_btn)
-                    s_angle[0] <= n_angle;
             end
             MODE_1: begin
+                if (l_btn)
+                    s_angle[0] <= p_angle;
+                else if (r_btn)
+                    s_angle[0] <= n_angle;
+
                 if (u_btn)
                     s_size[0] <= s_size[0] + 1;
                 else if (d_btn && (|s_size[0]))
                     s_size[0] <= s_size[0] - 1;
 
+                if (c_btn_p) begin
+                    if (s_ty[0] == MAX_TYPE)
+                        s_ty[0] <= 0;
+                    else
+                        s_ty[0] <= s_ty[0] + 1;
+                end
+            end
+            MODE_2: begin
                 if (l_btn_p && (|number)) begin
                     number <= number - 1;
                     s_color[number] <= 12'b0;
@@ -324,7 +340,7 @@ module core #(
                     number <= number + 1;
                 end
             end
-            MODE_2: begin
+            MODE_3: begin
                 if (u_btn && (|cy))
                     cy <= cy - 1;
                 else if (d_btn && (cy < COLOR_SIZE - 1))
