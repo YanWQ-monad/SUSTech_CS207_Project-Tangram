@@ -284,7 +284,12 @@ module core #(
                 end
                 MODE_0: next_state = DONE;
                 MODE_1: next_state = DONE;
-                MODE_2: next_state = c_btn_once ? NEXT_SHAPE : DONE;
+                MODE_2: begin
+                    if (c_btn_once)
+                        next_state = NEXT_SHAPE;
+                    else
+                        next_state = DONE;
+                end
                 MODE_3: next_state = DONE;
                 NEXT_SHAPE: next_state = DONE;
                 DONE: next_state = IDLE;
