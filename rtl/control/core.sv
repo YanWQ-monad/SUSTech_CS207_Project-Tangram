@@ -234,21 +234,11 @@ module core #(
     div10 div26(.in(temps[8]), .quotient(), .remainder(t_digit2[6]));
 
     always_comb begin
-        if (s_angle[0] < 0)
-            t_angle = s_angle[0] + 360;
-        else
-            t_angle = s_angle[0];
-
-        if (black)
-            r_color = 12'h000;
-        else
-            r_color = s_color[s_id];
-
         color_en = (sx >= COLOR_X) && (sy >= COLOR_Y) && (csx < COLOR_SIZE) && (csy < COLOR_SIZE);
-        if (swch_3 && color_en) begin
-            o_color = c_render;
-        end else
-            o_color = r_color;
+
+        t_angle = (s_angle[0] < 0) ? (s_angle[0] + 360) : s_angle[0];
+        r_color = black ? 12'h000 : s_color[s_id];
+        o_color = (swch_3 && color_en) ? c_render : r_color;
 
         if (de) begin
             vga_r = o_color[11:8];
@@ -299,12 +289,7 @@ module core #(
                 end
                 MODE_0: next_state = DONE;
                 MODE_1: next_state = DONE;
-                MODE_2: begin
-                    if (c_btn_once)
-                        next_state = NEXT_SHAPE;
-                    else
-                        next_state = DONE;
-                end
+                MODE_2: next_state = c_btn_once ? NEXT_SHAPE : DONE;
                 MODE_3: next_state = DONE;
                 NEXT_SHAPE: next_state = DONE;
                 DONE: next_state = IDLE;
@@ -337,12 +322,8 @@ module core #(
                 else if (d_btn_p && (|s_size[0]))
                     s_size[0] <= s_size[0] - 1;
 
-                if (c_btn_once) begin
-                    if (s_ty[0] == MAX_TYPE)
-                        s_ty[0] <= 0;
-                    else
-                        s_ty[0] <= s_ty[0] + 1;
-                end
+                if (c_btn_once)
+                    s_ty[0] <= (s_ty[0] == MAX_TYPE) ? 0 : s_ty[0] + 1;
             end
             MODE_2: begin
                 if (l_btn_once && (|number)) begin

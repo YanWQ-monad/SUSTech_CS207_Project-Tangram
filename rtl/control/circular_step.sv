@@ -15,15 +15,8 @@ module circular_step #(
 );
 
     always_comb begin
-        if (in == UP_BOUND)
-            next = DW_BOUND;
-        else
-            next = in + 1;
-
-        if (in == DW_BOUND)
-            prev = UP_BOUND;
-        else
-            prev = in - 1;
+        next = (in == UP_BOUND) ? DW_BOUND : (in + 1);
+        prev = (in == DW_BOUND) ? UP_BOUND : (in - 1);
     end
 
 endmodule
