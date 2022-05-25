@@ -108,14 +108,6 @@ module core #(
     assign dip_1 = 8'b00100100;
     assign dip_2 = 8'b00000000;
 
-    genvar j;
-    generate
-        for (j = 0; j < 8; j = j + 1) begin
-            initial t_digit1[j] = 4'hA;
-            initial t_digit2[j] = 4'hA;
-        end
-    endgenerate
-
     genvar i;
     generate
         for (i = 0; i < MAXSHP; i = i + 1)
@@ -232,6 +224,9 @@ module core #(
     div10 div24(.in(s_size[0]), .quotient(temps[7]), .remainder(t_digit2[4]));
     div10 div25(.in(temps[7]), .quotient(temps[8]), .remainder(t_digit2[5]));
     div10 div26(.in(temps[8]), .quotient(), .remainder(t_digit2[6]));
+
+    assign t_digit2[3] = 4'hA;
+    assign t_digit2[7] = 4'hA;
 
     always_comb begin
         color_en = (sx >= COLOR_X) && (sy >= COLOR_Y) && (csx < COLOR_SIZE) && (csy < COLOR_SIZE);
