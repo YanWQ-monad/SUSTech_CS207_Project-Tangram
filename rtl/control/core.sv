@@ -81,8 +81,8 @@ module core #(
 
     // Pre-processor
     logic [`INT_BITS-1:0] a_id;
-    logic signed [`INT_BITS-1:0] a_angle, a_x0, a_y0;
-    logic signed [`FLOAT_BITS-1:0] a_ix, a_iy, a_sin, a_cos;
+    logic signed [`INT_BITS-1:0] a_angle;
+    logic signed [`FLOAT_BITS-1:0] a_x0, a_y0, a_ix, a_iy, a_sin, a_cos;
     logic [1:0] a_cnt;
 
     logic [`INT_BITS-1:0] number;
@@ -336,8 +336,8 @@ module core #(
         case (state)
             PREP_W: begin
                 a_angle <= s_angle[a_id];
-                a_x0 <= s_x[a_id];
-                a_y0 <= s_y[a_id];
+                a_x0 <= { s_x[a_id], { `FLOAT_DCM_BITS{ 1'b0 } } };
+                a_y0 <= { s_y[a_id], { `FLOAT_DCM_BITS{ 1'b0 } } };
             end
             PREP_I: a_cnt <= a_cnt + 1;
             PREP_R: begin
