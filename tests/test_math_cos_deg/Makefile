@@ -7,5 +7,6 @@ TOPLEVEL = cos_deg
 MODULE = test_math_cos_deg
 
 COMPILE_ARGS += -I ../../
+export PYTHONPATH := ../common:$(PYTHONPATH)
 
 include $(shell cocotb-config --makefiles)/Makefile.sim

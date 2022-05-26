@@ -11,7 +11,7 @@ async def div10_test(dut):
     for i in range(0, 10000):
         dut_in.value = i
 
-        await Timer(2, units="ns")
+        await Timer(2, units='ns')
 
         quotient = dut.quotient.value.integer
         remainder = dut.remainder.value.integer

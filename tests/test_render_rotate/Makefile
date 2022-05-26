@@ -10,5 +10,6 @@ TOPLEVEL = rotate
 MODULE = test_render_rotate
 
 COMPILE_ARGS += -I ../../
+export PYTHONPATH := ../common:$(PYTHONPATH)
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
