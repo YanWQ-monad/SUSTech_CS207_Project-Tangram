@@ -398,11 +398,14 @@ module core #(
             NEXT_SHAPE: begin
                 `include "rtl/control/core_switch_gen.sv.partial"
             end
-            INIT: begin  // TODO: add more
-                number <= 1;
+            INIT: begin
+                `include "rtl/control/reset.sv.partial"
+
+                number <= 0;
                 cx <= 0;
                 cy <= 0;
                 a_id <= 0;
+                a_cnt <= 0;
             end
             default: ;
         endcase
