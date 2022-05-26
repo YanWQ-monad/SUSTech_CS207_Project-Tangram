@@ -19,6 +19,90 @@ s_size[3] <= s_size[2];
 s_angle[3] <= s_angle[2];
 s_color[3] <= s_color[2];
 
+s_ty[4] <= s_ty[3];
+s_x[4] <= s_x[3];
+s_y[4] <= s_y[3];
+s_size[4] <= s_size[3];
+s_angle[4] <= s_angle[3];
+s_color[4] <= s_color[3];
+
+s_ty[5] <= s_ty[4];
+s_x[5] <= s_x[4];
+s_y[5] <= s_y[4];
+s_size[5] <= s_size[4];
+s_angle[5] <= s_angle[4];
+s_color[5] <= s_color[4];
+
+s_ty[6] <= s_ty[5];
+s_x[6] <= s_x[5];
+s_y[6] <= s_y[5];
+s_size[6] <= s_size[5];
+s_angle[6] <= s_angle[5];
+s_color[6] <= s_color[5];
+
+s_ty[7] <= s_ty[6];
+s_x[7] <= s_x[6];
+s_y[7] <= s_y[6];
+s_size[7] <= s_size[6];
+s_angle[7] <= s_angle[6];
+s_color[7] <= s_color[6];
+
+s_ty[8] <= s_ty[7];
+s_x[8] <= s_x[7];
+s_y[8] <= s_y[7];
+s_size[8] <= s_size[7];
+s_angle[8] <= s_angle[7];
+s_color[8] <= s_color[7];
+
+s_ty[9] <= s_ty[8];
+s_x[9] <= s_x[8];
+s_y[9] <= s_y[8];
+s_size[9] <= s_size[8];
+s_angle[9] <= s_angle[8];
+s_color[9] <= s_color[8];
+
+s_ty[10] <= s_ty[9];
+s_x[10] <= s_x[9];
+s_y[10] <= s_y[9];
+s_size[10] <= s_size[9];
+s_angle[10] <= s_angle[9];
+s_color[10] <= s_color[9];
+
+s_ty[11] <= s_ty[10];
+s_x[11] <= s_x[10];
+s_y[11] <= s_y[10];
+s_size[11] <= s_size[10];
+s_angle[11] <= s_angle[10];
+s_color[11] <= s_color[10];
+
+s_ty[12] <= s_ty[11];
+s_x[12] <= s_x[11];
+s_y[12] <= s_y[11];
+s_size[12] <= s_size[11];
+s_angle[12] <= s_angle[11];
+s_color[12] <= s_color[11];
+
+s_ty[13] <= s_ty[12];
+s_x[13] <= s_x[12];
+s_y[13] <= s_y[12];
+s_size[13] <= s_size[12];
+s_angle[13] <= s_angle[12];
+s_color[13] <= s_color[12];
+
+s_ty[14] <= s_ty[13];
+s_x[14] <= s_x[13];
+s_y[14] <= s_y[13];
+s_size[14] <= s_size[13];
+s_angle[14] <= s_angle[13];
+s_color[14] <= s_color[13];
+
+s_ty[15] <= s_ty[14];
+s_x[15] <= s_x[14];
+s_y[15] <= s_y[14];
+s_size[15] <= s_size[14];
+s_angle[15] <= s_angle[14];
+s_color[15] <= s_color[14];
+
 s_ty[0] <= s_ty[number];
 s_x[0] <= s_x[number];
 s_y[0] <= s_y[number];

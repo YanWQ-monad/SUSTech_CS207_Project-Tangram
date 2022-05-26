@@ -1,4 +1,4 @@
-MAX_SHAPE = 4
+MAX_SHAPE = 16
 
 ARGUMENTS = [
     's_ty',
