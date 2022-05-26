@@ -5,42 +5,43 @@
 `include "rtl/math/constants.h"
 
 module render_shape (
-    input  wire logic        [`INT_BITS-1:0] ty,     // shape type
-    input  wire logic signed [`INT_BITS-1:0] x0,     // reference point x
-    input  wire logic signed [`INT_BITS-1:0] y0,     // reference point y
-    input  wire logic        [`INT_BITS-1:0] size,   // shape size
-    // input  wire logic signed [`INT_BITS-1:0] angle,  // rotate angle (degree)
+    input  wire logic clk,
+    input  wire logic newline,
+    input  wire logic newframe,
+
+    input  wire logic        [`INT_BITS-1:0] ty,
+    input  wire logic        [`INT_BITS-1:0] size,
     input  wire logic signed [`FLOAT_BITS-1:0] sin,
     input  wire logic signed [`FLOAT_BITS-1:0] cos,
-
-    input  wire logic signed [`INT_BITS-1:0] x,      // drawing position x
-    input  wire logic signed [`INT_BITS-1:0] y,      // drawing position y
+    input  wire logic signed [`FLOAT_BITS-1:0] ix,
+    input  wire logic signed [`FLOAT_BITS-1:0] iy,
 
     output      logic out  // 1 if in the shape
 );
 
-    logic signed [`INT_BITS-1:0] dx, dy, ox, oy, sum;
-    logic signed [`FLOAT_BITS-1:0] fx, fy, rx, ry;
+    logic signed [`INT_BITS-1:0] ox, oy, sum;
+    logic signed [`FLOAT_BITS-1:0] x, y, rx, ry;
 
-    rotate rotate(
-        .x(fx),
-        .y(fy),
-        .sin,
-        .cos,
-        .x1(rx),
-        .y1(ry)
-    );
+    always_ff @(posedge clk) begin
+        if (newframe) begin
+            x <= ix;
+            y <= iy;
+            rx <= ix - sin;
+            ry <= iy + cos;
+        end else if (newline) begin
+            x <= rx;
+            y <= ry;
+            rx <= rx - sin;
+            ry <= ry - cos;
+        end else begin
+            x <= x + cos;
+            y <= y + sin;
+        end
+    end
 
     always_comb begin
-        dx = x - x0;
-        dy = y - y0;
-
-        fx = { dx, { `FLOAT_DCM_BITS{1'b0} } };
-        fy = { dy, { `FLOAT_DCM_BITS{1'b0} } };
-
-        ox = rx >>> `FLOAT_DCM_BITS;
-        oy = ry >>> `FLOAT_DCM_BITS;
-
+        ox = x >>> `FLOAT_DCM_BITS;
+        oy = y >>> `FLOAT_DCM_BITS;
         sum = ox + oy;
 
         case (ty)

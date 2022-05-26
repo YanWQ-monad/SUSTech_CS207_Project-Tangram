@@ -57,7 +57,7 @@ module core #(
     logic [1:0] l_btn_mag, r_btn_mag, u_btn_mag, d_btn_mag, c_btn_mag;
 
     // Signals
-    logic sg_done, sg_frame;
+    logic sg_done, sg_newline, sg_endframe, sg_newframe;
 
     // VGA properties
     logic [CORDW-1:0] sx, sy;
@@ -68,19 +68,22 @@ module core #(
     logic [`INT_BITS-1:0] s_x [MAXSHP-1:0];
     logic [`INT_BITS-1:0] s_y [MAXSHP-1:0];
     logic [`INT_BITS-1:0] s_size [MAXSHP-1:0];
-    logic signed [`FLOAT_BITS-1:0] s_sin [MAXSHP-1:0];
-    logic signed [`FLOAT_BITS-1:0] s_cos [MAXSHP-1:0];
     logic signed [`INT_BITS-1:0] s_angle [MAXSHP-1:0];
     logic [PIXLW-1:0] s_color [MAXSHP-1:0];
+    logic signed [`FLOAT_BITS-1:0] s_sin [MAXSHP-1:0];
+    logic signed [`FLOAT_BITS-1:0] s_cos [MAXSHP-1:0];
+    logic signed [`FLOAT_BITS-1:0] s_ix [MAXSHP-1:0];
+    logic signed [`FLOAT_BITS-1:0] s_iy [MAXSHP-1:0];
     logic [MAXSHP-1:0] ens;
 
     // Angle rotation
     logic [`INT_BITS-1:0] p_angle, n_angle;
 
-    // Angle sin/cos initializer
+    // Pre-processor
     logic [`INT_BITS-1:0] a_id;
-    logic [`INT_BITS-1:0] a_angle;
-    logic signed [`FLOAT_BITS-1:0] a_sin, a_cos;
+    logic signed [`INT_BITS-1:0] a_angle, a_x0, a_y0;
+    logic signed [`FLOAT_BITS-1:0] a_ix, a_iy, a_sin, a_cos;
+    logic [1:0] a_cnt;
 
     logic [`INT_BITS-1:0] number;
     logic [`INT_BITS-1:0] s_id;
@@ -102,13 +105,8 @@ module core #(
     logic [7:0] ten_1, ten_2;
     logic [`INT_BITS-1:0] temps[8:0];
 
-    logic [`INT_BITS-1:0] x, y;
     logic [PIXLW-1:0] o_color;
 
-    initial s_size[0] = 10;  // todo: move to init
-
-    assign x = sx;
-    assign y = sy;
     assign csx = sx - COLOR_X;
     assign csy = sy - COLOR_Y;
     assign out_1 = collision;
@@ -119,21 +117,30 @@ module core #(
     generate
         for (i = 0; i < MAXSHP; i = i + 1)
             render_shape render(
+                .clk,
                 .ty(s_ty[i]),
-                .x0(s_x[i]),
-                .y0(s_y[i]),
                 .size(s_size[i]),
-                // .angle(s_angle[i]),
                 .sin(s_sin[i]),
                 .cos(s_cos[i]),
-                .x,
-                .y,
+                .ix(s_ix[i]),
+                .iy(s_iy[i]),
+                .newline(sg_newline),
+                .newframe(sg_newframe),
                 .out(ens[i])
             );
     endgenerate
 
     cos_deg cos(.in(a_angle), .out(a_cos));
     sin_deg sin(.in(a_angle), .out(a_sin));
+
+    rotate initial_rotate(
+        .x(-a_x0),
+        .y(-a_y0),
+        .sin(a_sin),
+        .cos(a_cos),
+        .x1(a_ix),
+        .y1(a_iy)
+    );
 
     circular_step #(.DATAW(`INT_BITS), .DW_BOUND(-180), .UP_BOUND(179)) step(
         .in(s_angle[0]),
@@ -160,7 +167,9 @@ module core #(
     vga_timing_600p timing(
         .clk_pix(clk),
         .rst_pix(rst),
-        .frame(sg_frame),
+        .endframe(sg_endframe),
+        .newframe(sg_newframe),
+        .newline(sg_newline),
         .sx,
         .sy,
         .hsync(vga_hsync),
@@ -270,7 +279,7 @@ module core #(
         end
     end
 
-    enum { INIT, IDLE, ANGLE_W, ANGLE_R, MODE_0, MODE_1, MODE_2, MODE_3, NEXT_SHAPE, DONE } state, next_state;
+    enum { INIT, IDLE, PREP_W, PREP_I, PREP_R, MODE_0, MODE_1, MODE_2, MODE_3, NEXT_SHAPE, DONE } state, next_state;
     always_ff @(posedge clk) state <= #1 next_state;
 
     always_comb begin
@@ -282,7 +291,7 @@ module core #(
             case (state)
                 INIT: next_state = DONE;
                 IDLE: begin
-                    if (sg_frame) begin
+                    if (sg_endframe) begin
                         if (swch_1)
                             next_state = MODE_1;
                         else if (swch_2)
@@ -294,12 +303,18 @@ module core #(
                     end else
                         next_state = IDLE;
                 end
-                ANGLE_W: next_state = ANGLE_R;
-                ANGLE_R: begin
+                PREP_W: next_state = PREP_I;
+                PREP_I: begin
+                    if (&a_cnt)
+                        next_state = PREP_R;
+                    else
+                        next_state = PREP_I;
+                end
+                PREP_R: begin
                     if (a_id == MAXSHP - 1)
                         next_state = IDLE;
                     else
-                        next_state = ANGLE_W;
+                        next_state = PREP_W;
                 end
                 MODE_0: next_state = DONE;
                 MODE_1: next_state = DONE;
@@ -311,7 +326,7 @@ module core #(
                 end
                 MODE_3: next_state = DONE;
                 NEXT_SHAPE: next_state = DONE;
-                DONE: next_state = ANGLE_W;
+                DONE: next_state = PREP_W;
                 default: next_state = DONE;
             endcase
         end
@@ -319,12 +334,17 @@ module core #(
 
     always_ff @(posedge clk) begin
         case (state)
-            ANGLE_W: begin
+            PREP_W: begin
                 a_angle <= s_angle[a_id];
+                a_x0 <= s_x[a_id];
+                a_y0 <= s_y[a_id];
             end
-            ANGLE_R: begin
+            PREP_I: a_cnt <= a_cnt + 1;
+            PREP_R: begin
                 s_sin[a_id] <= a_sin;
                 s_cos[a_id] <= a_cos;
+                s_ix[a_id] <= a_ix;
+                s_iy[a_id] <= a_iy;
                 a_id <= (a_id == MAXSHP - 1) ? 0 : (a_id + 1);
             end
             MODE_0: begin

@@ -5,7 +5,9 @@
 module vga_timing_600p (
     input  wire logic clk_pix,   // pixel clock
     input  wire logic rst_pix,   // reset in pixel clock domain
-    output      logic frame,     // frame finish signal
+    output      logic endframe,  // frame finish signal
+    output      logic newframe,  // new frame signal
+    output      logic newline,   // new line signal
     output      logic [9:0] sx,  // horizontal screen position
     output      logic [9:0] sy = 0,  // vertical screen position
     output      logic hsync,     // horizontal sync
@@ -32,7 +34,10 @@ module vga_timing_600p (
         hsync = ~((ix >= HS_STA) && (ix < HS_END));
         vsync = ~((sy >= VS_STA) && (sy < VS_END));
         de = (ix < HA_END) && (sy < VA_END);
-        frame = (ix == HA_END) && (sy == VA_END);
+
+        endframe = (ix == HA_END) && (sy == VA_END);
+        newframe = (ix == 0) && (sy == 0);
+        newline = (ix == 0);
     end
 
     always_ff @(posedge clk_pix) begin
