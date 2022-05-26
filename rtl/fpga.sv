@@ -15,6 +15,8 @@ module fpga (
     input  wire logic swch_1_r,  // mode 1: select shape(C) & resize(UD) & remove/add(LR)
     input  wire logic swch_2_r,  // mode 2: color choose
     input  wire logic swch_3_r,
+    input  wire logic swch_6_r,
+    input  wire logic swch_7_r,
 
     output      logic out_1,   // collision detection
     output      logic [7:0] tube_l,
@@ -31,7 +33,7 @@ module fpga (
     logic rst;
 
     logic clk_pix, clk_pix_locked;
-    logic l_btn, r_btn, u_btn, d_btn, c_btn, swch_1, swch_2, swch_3;
+    logic l_btn, r_btn, u_btn, d_btn, c_btn, swch_1, swch_2, swch_3, swch_6, swch_7;
     logic l_btn_dn, r_btn_dn, u_btn_dn, d_btn_dn, c_btn_dn;
 
     vga_clock_600p clock(
@@ -49,6 +51,8 @@ module fpga (
     input_debounce swch_1_deb(.clk(clk_pix), .in(swch_1_r), .out(swch_1), .ondn(), .onup());
     input_debounce swch_2_deb(.clk(clk_pix), .in(swch_2_r), .out(swch_2), .ondn(), .onup());
     input_debounce swch_3_deb(.clk(clk_pix), .in(swch_3_r), .out(swch_3), .ondn(), .onup());
+    input_debounce swch_6_deb(.clk(clk_pix), .in(swch_6_r), .out(swch_6), .ondn(), .onup());
+    input_debounce swch_7_deb(.clk(clk_pix), .in(swch_7_r), .out(swch_7), .ondn(), .onup());
 
     core core(
         .clk(clk_pix),
@@ -69,6 +73,8 @@ module fpga (
         .swch_1,
         .swch_2,
         .swch_3,
+        .swch_6,
+        .swch_7,
 
         .out_1,
         .tube_l,
