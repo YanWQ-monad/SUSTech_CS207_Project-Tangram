@@ -19,7 +19,7 @@ module render_shape (
     output      logic out  // 1 if in the shape
 );
 
-    logic signed [`INT_BITS-1:0] ox, oy, sum, hy;
+    logic signed [`INT_BITS-1:0] ox, oy, sum, sub, hy;
     logic signed [`FLOAT_BITS-1:0] x, y, rx, ry;
 
     always_ff @(posedge clk) begin
@@ -43,6 +43,7 @@ module render_shape (
         ox = x >>> `FLOAT_DCM_BITS;
         oy = y >>> `FLOAT_DCM_BITS;
         sum = ox + oy;
+        sub = ox - oy;
         hy = oy >>> 1;
 
         case (ty)
@@ -51,6 +52,7 @@ module render_shape (
             2: out = (ox >= 0) && (oy >= 0) && (ox < size) && (oy < size);  // square
             3: out = (ox >= 0) && (oy >= 0) && (ox < size) && (hy < size);  // rectangle
             4: out = (oy >= 0) && (oy < size) && (sum >= 0) && (sum < size);  // parallelogram
+            5: out = (oy >= 0) && (oy < size) && (sub >= 0) && (sub < (size << 1));  // parallelogram 2
             default: out = 0;
         endcase
     end

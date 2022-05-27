@@ -47,7 +47,7 @@ module core #(
     output      logic [COLRW-1:0] vga_b   // 4-bit VGA blue
 );
 
-    parameter MAX_TYPE = 5 - 1;
+    parameter MAX_TYPE = 6 - 1;
     parameter COLOR_X = 340;
     parameter COLOR_Y = 240;
     parameter COLOR_SIZE = 64 * 2;
