@@ -1,51 +1,53 @@
+number <= 7;
+
 s_ty[0] <= 0;
 s_x[0] <= 400;
 s_y[0] <= 300;
-s_size[0] <= 10;
-s_angle[0] <= 0;
-s_color[0] <= 12'hFFF;
+s_size[0] <= 282;
+s_angle[0] <= -135;
+s_color[0] <= 12'h6CD;
 
 s_ty[1] <= 0;
-s_x[1] <= 0;
-s_y[1] <= 0;
-s_size[1] <= 0;
-s_angle[1] <= 0;
-s_color[1] <= 0;
+s_x[1] <= 400;
+s_y[1] <= 300;
+s_size[1] <= 282;
+s_angle[1] <= 135;
+s_color[1] <= 12'hDE9;
 
 s_ty[2] <= 0;
-s_x[2] <= 0;
-s_y[2] <= 0;
-s_size[2] <= 0;
-s_angle[2] <= 0;
-s_color[2] <= 0;
+s_x[2] <= 400;
+s_y[2] <= 300;
+s_size[2] <= 141;
+s_angle[2] <= 45;
+s_color[2] <= 12'hFF2;
 
-s_ty[3] <= 0;
-s_x[3] <= 0;
-s_y[3] <= 0;
-s_size[3] <= 0;
-s_angle[3] <= 0;
-s_color[3] <= 0;
+s_ty[3] <= 2;
+s_x[3] <= 400;
+s_y[3] <= 300;
+s_size[3] <= 141;
+s_angle[3] <= -45;
+s_color[3] <= 12'hA9C;
 
 s_ty[4] <= 0;
-s_x[4] <= 0;
-s_y[4] <= 0;
-s_size[4] <= 0;
-s_angle[4] <= 0;
-s_color[4] <= 0;
+s_x[4] <= 300;
+s_y[4] <= 400;
+s_size[4] <= 141;
+s_angle[4] <= -45;
+s_color[4] <= 12'hF9C;
 
 s_ty[5] <= 0;
-s_x[5] <= 0;
-s_y[5] <= 0;
-s_size[5] <= 0;
-s_angle[5] <= 0;
-s_color[5] <= 0;
+s_x[5] <= 600;
+s_y[5] <= 500;
+s_size[5] <= 200;
+s_angle[5] <= -180;
+s_color[5] <= 12'hFC2;
 
-s_ty[6] <= 0;
-s_x[6] <= 0;
-s_y[6] <= 0;
-s_size[6] <= 0;
-s_angle[6] <= 0;
-s_color[6] <= 0;
+s_ty[6] <= 5;
+s_x[6] <= 600;
+s_y[6] <= 100;
+s_size[6] <= 100;
+s_angle[6] <= -90;
+s_color[6] <= 12'hF46;
 
 s_ty[7] <= 0;
 s_x[7] <= 0;

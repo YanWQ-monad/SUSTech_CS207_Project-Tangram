@@ -431,7 +431,6 @@ module core #(
             INIT: begin
                 `include "rtl/control/reset.sv.partial"
 
-                number <= 1;
                 cx <= 0;
                 cy <= 0;
                 a_id <= 0;
