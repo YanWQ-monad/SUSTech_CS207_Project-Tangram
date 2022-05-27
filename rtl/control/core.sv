@@ -280,7 +280,16 @@ module core #(
         end
     end
 
-    enum { INIT, IDLE, PREP_W, PREP_I, PREP_R, MODE_0, MODE_1, MODE_2, MODE_3, NEXT_SHAPE, NEXT_SHAPE_2, DONE } state, next_state;
+    enum {
+        INIT,
+        IDLE,
+        PREP_W, PREP_I, PREP_R,
+        MODE_0, MODE_1, MODE_2, MODE_3,
+        NEXT_SHAPE, NEXT_SHAPE_2,
+        DELETE_END,
+        DONE
+    } state, next_state;
+
     always_ff @(posedge clk) state <= #1 next_state;
 
     always_comb begin
@@ -320,14 +329,17 @@ module core #(
                 MODE_0: next_state = DONE;
                 MODE_1: next_state = DONE;
                 MODE_2: begin
-                    if (c_btn_once)
+                    if (l_btn_once)
+                        next_state = DELETE_END;
+                    else if (c_btn_once)
                         next_state = NEXT_SHAPE;
                     else
                         next_state = DONE;
                 end
                 MODE_3: next_state = DONE;
                 NEXT_SHAPE: next_state = NEXT_SHAPE_2;
-                NEXT_SHAPE_2: next_state = DONE;
+                NEXT_SHAPE_2: next_state = DELETE_END;
+                DELETE_END: next_state = DONE;
                 DONE: next_state = PREP_W;
                 default: next_state = DONE;
             endcase
@@ -376,13 +388,13 @@ module core #(
             end
             MODE_2: begin
                 if (l_btn_once && (|number)) begin
-                    s_color[number - 1] <= 12'b0;
                     number <= number - 1;
                 end else if (r_btn_once && (number < MAXSHP - 1)) begin
                     s_color[number] <= 12'hFFF;
                     number <= number + 1;
                 end
 
+                // if (l_btn_once) -> DELETE_END
                 // if (c_btn_once) -> NEXT_SHAPE
             end
             MODE_3: begin
@@ -409,7 +421,8 @@ module core #(
                 s_size[0] <= s_size[number];
                 s_angle[0] <= s_angle[number];
                 s_color[0] <= s_color[number];
-
+            end
+            DELETE_END: begin
                 s_x[number] <= 0;
                 s_y[number] <= 0;
                 s_size[number] <= 0;
