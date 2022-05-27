@@ -38,7 +38,7 @@ module fpga (
 
     vga_clock_600p clock(
         .clk_100m(clk),
-        .rst(~reset),
+        .rst(1'b0),
         .clk_pix,
         .clk_pix_locked
     );
