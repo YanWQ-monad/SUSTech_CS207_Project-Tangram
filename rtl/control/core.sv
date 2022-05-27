@@ -279,7 +279,7 @@ module core #(
         end
     end
 
-    enum { INIT, IDLE, PREP_W, PREP_I, PREP_R, MODE_0, MODE_1, MODE_2, MODE_3, NEXT_SHAPE, DONE } state, next_state;
+    enum { INIT, IDLE, PREP_W, PREP_I, PREP_R, MODE_0, MODE_1, MODE_2, MODE_3, NEXT_SHAPE, NEXT_SHAPE_2, DONE } state, next_state;
     always_ff @(posedge clk) state <= #1 next_state;
 
     always_comb begin
@@ -292,12 +292,12 @@ module core #(
                 INIT: next_state = DONE;
                 IDLE: begin
                     if (sg_endframe) begin
-                        if (swch_1)
+                        if (swch_3)
+                            next_state = MODE_3;
+                        else if (swch_1)
                             next_state = MODE_1;
                         else if (swch_2)
                             next_state = MODE_2;
-                        else if (swch_3)
-                            next_state = MODE_3;
                         else
                             next_state = MODE_0;
                     end else
@@ -325,7 +325,8 @@ module core #(
                         next_state = DONE;
                 end
                 MODE_3: next_state = DONE;
-                NEXT_SHAPE: next_state = DONE;
+                NEXT_SHAPE: next_state = NEXT_SHAPE_2;
+                NEXT_SHAPE_2: next_state = DONE;
                 DONE: next_state = PREP_W;
                 default: next_state = DONE;
             endcase
@@ -374,8 +375,8 @@ module core #(
             end
             MODE_2: begin
                 if (l_btn_once && (|number)) begin
+                    s_color[number - 1] <= 12'b0;
                     number <= number - 1;
-                    s_color[number] <= 12'b0;
                 end else if (r_btn_once && (number < MAXSHP - 1)) begin
                     s_color[number] <= 12'hFFF;
                     number <= number + 1;
@@ -398,10 +399,23 @@ module core #(
             NEXT_SHAPE: begin
                 `include "rtl/control/core_switch_gen.sv.partial"
             end
+            NEXT_SHAPE_2: begin
+                s_ty[0] <= s_ty[number];
+                s_x[0] <= s_x[number];
+                s_y[0] <= s_y[number];
+                s_size[0] <= s_size[number];
+                s_angle[0] <= s_angle[number];
+                s_color[0] <= s_color[number];
+
+                s_x[number] <= 0;
+                s_y[number] <= 0;
+                s_size[number] <= 0;
+                s_color[number] <= 12'h000;
+            end
             INIT: begin
                 `include "rtl/control/reset.sv.partial"
 
-                number <= 0;
+                number <= 1;
                 cx <= 0;
                 cy <= 0;
                 a_id <= 0;

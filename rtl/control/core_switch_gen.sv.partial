@@ -102,10 +102,3 @@ s_y[15] <= s_y[14];
 s_size[15] <= s_size[14];
 s_angle[15] <= s_angle[14];
 s_color[15] <= s_color[14];
-
-s_ty[0] <= s_ty[number];
-s_x[0] <= s_x[number];
-s_y[0] <= s_y[number];
-s_size[0] <= s_size[number];
-s_angle[0] <= s_angle[number];
-s_color[0] <= s_color[number];
