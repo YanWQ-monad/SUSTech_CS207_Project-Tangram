@@ -14,7 +14,7 @@ def set_dut(dut, ty, x0, y0, size, angle):
 async def get_coordinate(dut, x, y):
     dut.x.value = x
     dut.y.value = y
-    await Timer(2, units="ns")
+    await Timer(2, units='ns')
     return dut.out.value.integer
 
 

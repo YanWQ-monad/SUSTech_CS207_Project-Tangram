@@ -15,7 +15,7 @@ async def circular_next_test(dut):
     for i in range(-180, 179):
         dut_in.value = i
 
-        await Timer(2, units="ns")
+        await Timer(2, units='ns')
 
         expected = (i + 180 + 1) % 360 - 180
         output = dut.next.value.signed_integer
@@ -32,7 +32,7 @@ async def circular_prev_test(dut):
     for i in range(-180, 179):
         dut_in.value = i
 
-        await Timer(2, units="ns")
+        await Timer(2, units='ns')
 
         expected = (i + 180 - 1) % 360 - 180
         output = dut.prev.value.signed_integer
