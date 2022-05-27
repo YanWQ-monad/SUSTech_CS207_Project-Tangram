@@ -381,6 +381,8 @@ module core #(
                     s_color[number] <= 12'hFFF;
                     number <= number + 1;
                 end
+
+                // if (c_btn_once) -> NEXT_SHAPE
             end
             MODE_3: begin
                 if (u_btn_p && (|cy))
