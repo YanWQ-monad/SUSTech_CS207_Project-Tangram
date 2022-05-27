@@ -32,7 +32,7 @@ module render_shape (
             x <= rx;
             y <= ry;
             rx <= rx - sin;
-            ry <= ry - cos;
+            ry <= ry + cos;
         end else begin
             x <= x + cos;
             y <= y + sin;
