@@ -5,9 +5,8 @@ SUBDIRS := $(wildcard */.)
 SUBDIRS := $(SUBDIRS:/.=)                        # Trim "/." suffix
 SUBDIRS := $(filter-out $(SKIPPED), $(SUBDIRS))  # Remove skipped
 
-ifdef FILTER
-	SUBDIRS := $(foreach v, $(SUBDIRS), $(if $(findstring $(FILTER), $(v)), $(v), ))
-endif
+FILTER ?= test_
+SUBDIRS := $(foreach v, $(SUBDIRS), $(if $(findstring $(FILTER), $(v)), $(v), ))
 
 .PHONY: all
 all: $(SUBDIRS)
