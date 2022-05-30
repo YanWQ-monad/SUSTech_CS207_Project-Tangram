@@ -148,14 +148,14 @@ module core #(
         .next(n_angle)
     );
 
-    pixel_selector #(.PIXLW(PIXLW), .MAXSHP(MAXSHP)) select(
+    pixel_selector #(.MAXSHP(MAXSHP)) select(
         .en(ens),
         .black,
         .id(s_id),
         .multiple(collision)
     );
 
-    color_map #(.PIXLW(PIXLW), .COLRW(COLRW)) map(
+    color_map #(.PIXLW(PIXLW)) map(
         .x(cx),
         .y(cy),
         .sx(csx),

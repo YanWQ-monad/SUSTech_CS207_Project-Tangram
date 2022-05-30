@@ -5,7 +5,6 @@
 `include "rtl/math/constants.h"
 
 module pixel_selector #(
-    parameter PIXLW = 12,
     parameter MAXSHP = 16
 ) (
     input  wire logic [MAXSHP-1:0] en,

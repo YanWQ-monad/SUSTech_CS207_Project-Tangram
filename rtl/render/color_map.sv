@@ -5,8 +5,7 @@
 `include "rtl/math/constants.h"
 
 module color_map #(
-    parameter PIXLW = 12,
-    parameter COLRW = 4
+    parameter PIXLW = 12
 ) (
     input  wire logic [`INT_BITS-1:0] x,
     input  wire logic [`INT_BITS-1:0] y,
