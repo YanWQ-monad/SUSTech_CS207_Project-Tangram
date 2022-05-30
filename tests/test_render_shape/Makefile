@@ -7,6 +7,7 @@ VERILOG_SOURCES += ../../rtl/math/sin.sv
 VERILOG_SOURCES += ../../rtl/math/sin_deg.sv
 VERILOG_SOURCES += ../../rtl/render/rotate.sv
 VERILOG_SOURCES += ../../rtl/render/render_shape.sv
+VERILOG_SOURCES += ../../rtl/render/render_shape_basic.sv
 TOPLEVEL = render_shape
 MODULE = test_render_shape
 

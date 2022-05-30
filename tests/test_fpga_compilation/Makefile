@@ -13,6 +13,7 @@ VERILOG_SOURCES += ../../rtl/math/sin.sv
 VERILOG_SOURCES += ../../rtl/math/sin_deg.sv
 VERILOG_SOURCES += ../../rtl/render/color_map.sv
 VERILOG_SOURCES += ../../rtl/render/render_shape.sv
+VERILOG_SOURCES += ../../rtl/render/render_shape_basic.sv
 VERILOG_SOURCES += ../../rtl/render/rotate.sv
 VERILOG_SOURCES += ../../rtl/tube/bcd_to_tube.sv
 VERILOG_SOURCES += ../../rtl/tube/tube_4_display.sv
