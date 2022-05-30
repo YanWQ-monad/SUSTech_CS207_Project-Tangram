@@ -250,22 +250,16 @@ module core #(
 
     assign t_digit2[1] = 4'hA;
 
+    assign vga_r = de ? o_color[11:8] : 4'h0;
+    assign vga_g = de ? o_color[7:4] : 4'h0;
+    assign vga_b = de ? o_color[3:0] : 4'h0;
+
     always_comb begin
         color_en = (sx >= COLOR_X) && (sy >= COLOR_Y) && (csx < COLOR_SIZE) && (csy < COLOR_SIZE);
 
         t_angle = (s_angle[0] < 0) ? (s_angle[0] + 360) : s_angle[0];
         r_color = black ? 12'h000 : s_color[s_id];
         o_color = (swch_3 && color_en) ? c_render : r_color;
-
-        if (de) begin
-            vga_r = o_color[11:8];
-            vga_g = o_color[7:4];
-            vga_b = o_color[3:0];
-        end else begin
-            vga_r = 4'h0;
-            vga_g = 4'h0;
-            vga_b = 4'h0;
-        end
     end
 
     always_comb begin
