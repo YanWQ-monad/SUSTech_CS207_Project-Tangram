@@ -2,6 +2,8 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
+// Reference: https://projectf.io/posts/fpga-pong/#debouncing
+
 module input_debounce (
     input  wire logic clk,   // clock
     input  wire logic in,    // signal input

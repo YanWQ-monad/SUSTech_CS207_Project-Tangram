@@ -10,6 +10,8 @@ module div10 (
     output      logic [3:0] remainder
 );
 
+    // Reference: https://stackoverflow.com/a/19076173
+
     logic [`INT_BITS-1:0] q, r;
 
     always_comb begin
